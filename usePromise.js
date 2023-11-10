@@ -1,25 +1,25 @@
-const myPromise1 = new Promise((resolve, reject) => {
+const myPromise1 = () => new Promise((resolve, reject) => {
     setTimeout(() => {
-        resolve("Operação 1 resolvida!");
-    }, 15000);
+        console.log("Operação 1 resolvida!");
+        resolve("Operação 1 concluída");
+    }, 5000);
 });
 
-const myPromise2 = new Promise((resolve, reject) => {
+const myPromise2 = () => new Promise((resolve, reject) => {
     setTimeout(() => {
-        resolve("Operação 2 resolvida!");
-    }, 10000);
+        console.log("Operação 2 resolvida!");
+        resolve("Operação 2 concluída");
+    }, 1000);
 });
 
 async function doSomething() {
     const start = performance.now();
     
-    await myPromise1.then((result) => {
-        console.log(result);
-    });
+    const result1 = await myPromise1();
+    console.log(result1);
     
-    await myPromise2.then((result) => {
-        console.log(result);
-    });
+    const result2 = await myPromise2();
+    console.log(result2);
     
     const end = performance.now();
     const executionTime = end - start;
@@ -29,11 +29,12 @@ async function doSomething() {
 async function doSomethingWithPromiseAll() {
     const start = performance.now();
 
-    await Promise.all([myPromise1, myPromise2]).then((results) => {
-        console.log(results);
-    });
+    const [result1, result2] = await Promise.all([myPromise1(), myPromise2()]);
+    console.log(result1);
+    console.log(result2);
 
     const end = performance.now();
     const executionTime = end - start;
     console.log(`Tempo de execução com otimização: ${executionTime}`);
 }
+
